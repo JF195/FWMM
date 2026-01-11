@@ -14,10 +14,11 @@ class Widget(WidgetBase):
         self.configuration = {
             "Board Width": Config(ConfigType.integer, 5, 1, WIDTH),
             "Board Height": Config(ConfigType.integer, 5, 1, HEIGHT),
+            "Brightness 1": Config(ConfigType.integer, 255, 0, 255),
+            "Brightness 2": Config(ConfigType.integer, 0, 0, 255),
             "Board Size": Config(ConfigType.integer, 1, 1, WIDTH),
             "X Offset": Config(ConfigType.integer, 0, 0, WIDTH),
-            "Y Offset": Config(ConfigType.integer, 0, 0, HEIGHT),
-            "Brightness": Config(ConfigType.integer, 255, 0, 255)
+            "Y Offset": Config(ConfigType.integer, 0, 0, HEIGHT)
         }
 
     def get_current_size(self):
@@ -34,6 +35,6 @@ class Widget(WidgetBase):
         xoff = self.configuration["X Offset"].value
         yoff = self.configuration["Y Offset"].value
 
-        base = np.matrix([[int( (((x + xoff) // size) % 2) + (((y + yoff) // size) % 2) != 1 ) * self.configuration["Brightness"].value for x in range(width)] for y in range(height)]) # type: ignore
+        base = np.matrix([[ self.configuration["Brightness 1"].value if ( (((x + xoff) // size) % 2) + (((y + yoff) // size) % 2) != 1 ) else self.configuration["Brightness 2"].value for x in range(width)] for y in range(height)]) # type: ignore
 
         return base
